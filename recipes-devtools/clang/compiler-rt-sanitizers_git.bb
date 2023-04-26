@@ -17,13 +17,14 @@ TUNE_CCARGS:remove = "-no-integrated-as"
 
 DEPENDS += "ninja-native virtual/crypt"
 DEPENDS:append:class-native = " clang-native libxcrypt-native"
-DEPENDS:append:class-nativesdk = " clang-native nativesdk-libxcrypt"
+DEPENDS:append:class-nativesdk = " clang-native clang-crosssdk-${SDK_ARCH} nativesdk-libxcrypt"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[crt] = "-DCOMPILER_RT_BUILD_CRT:BOOL=ON,-DCOMPILER_RT_BUILD_CRT:BOOL=OFF"
 PACKAGECONFIG[static-libcxx] = "-DSANITIZER_USE_STATIC_CXX_ABI=ON -DSANITIZER_USE_STATIC_LLVM_UNWINDER=ON,,"
 
-HF = "${@ bb.utils.contains('TUNE_CCARGS_MFLOAT', 'hard', 'hf', '', d)}"
+HF = ""
+HF:class-target = "${@ bb.utils.contains('TUNE_CCARGS_MFLOAT', 'hard', 'hf', '', d)}"
 HF[vardepvalue] = "${HF}"
 
 OECMAKE_TARGET_COMPILE = "compiler-rt"
@@ -60,7 +61,8 @@ do_install:append () {
         rmdir --ignore-fail-on-non-empty ${D}${libdir}
     fi
     # Already shipped with compile-rt Orc support
-    rm -rf ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/libclang_rt.orc-x86_64.a
+    rm -rf ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/lib/linux/libclang_rt.orc-*.a
+    rm -rf ${D}${nonarch_libdir}/clang/${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}/include/orc/
 }
 
 FILES_SOLIBSDEV = ""

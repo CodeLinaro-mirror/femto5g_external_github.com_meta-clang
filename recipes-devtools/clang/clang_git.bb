@@ -258,6 +258,18 @@ PROVIDES:append:class-native = " llvm-native"
 
 BBCLASSEXTEND = "native nativesdk"
 
+RDEPENDS:${PN} += "\
+  perl-module-digest-md5 \
+  perl-module-file-basename \
+  perl-module-file-copy \
+  perl-module-file-find \
+  perl-module-file-path \
+  perl-module-findbin \
+  perl-module-hash-util \
+  perl-module-sys-hostname \
+  perl-module-term-ansicolor \
+"
+
 RDEPENDS:lldb += "${PN}-lldb-python"
 
 FILES:${PN}-lldb-python = "${libdir}/python*/site-packages/lldb/*"
@@ -283,8 +295,8 @@ FILES:lldb-server = "\
 "
 
 FILES:liblldb = "\
-  ${libdir}/liblldbIntelFeatures.so* \
-  ${libdir}/liblldb.so* \
+  ${libdir}/liblldbIntelFeatures.so.* \
+  ${libdir}/liblldb.so.* \
 "
 
 FILES:${PN}-libllvm =+ "\
@@ -295,7 +307,7 @@ FILES:${PN}-libllvm =+ "\
 "
 
 FILES:libclang = "\
-  ${libdir}/libclang.so.${MAJOR_VER} \
+  ${libdir}/libclang.so.* \
 "
 
 FILES:${PN}-dev += "\
